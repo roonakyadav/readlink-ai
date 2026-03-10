@@ -1,8 +1,13 @@
 {
   "manifest_version": 3,
-  "name": "ChatDocs - Google Docs Reader for ChatGPT",
+  "name": "ReadLink AI – Let AI read your links",
   "version": "1.0.0",
-  "description": "Automatically fetches Google Docs content and injects it into ChatGPT prompts",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "description": "Paste a Google Docs link in ChatGPT and ReadLink AI automatically loads the document content so the AI can read it.",
 
   "permissions": ["activeTab", "storage", "scripting"],
 

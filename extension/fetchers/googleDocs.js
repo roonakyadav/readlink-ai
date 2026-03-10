@@ -10,7 +10,7 @@
  */
 async function fetchGoogleDocText(docId) {
 
-  console.log(`[ChatDocs][googleDocs][fetchGoogleDocText] Starting`, { docId });
+  console.log(`[ReadLinkAI][googleDocs][fetchGoogleDocText] Starting`, { docId });
 
   const response = await sendMessageWithTimeout(
     {
@@ -25,10 +25,12 @@ async function fetchGoogleDocText(docId) {
     }
   );
 
-  if (!response.ok) {
+  if (!response || !response.ok) {
     const code = response?.error?.code || "BACKGROUND_ERROR";
     const message = response?.error?.message || "Failed to fetch Google Doc";
-    console.error(`[ChatDocs][googleDocs][fetchGoogleDocText] Background error`, response?.error);
+
+    console.warn(`[ReadLinkAI][googleDocs] Background error`, response?.error);
+
     const err = new Error(message);
     err.code = code;
     err.details = response?.error?.details;
@@ -36,16 +38,19 @@ async function fetchGoogleDocText(docId) {
   }
 
   const text = response?.data?.text || "";
-  console.log(`[ChatDocs][googleDocs][fetchGoogleDocText] Raw length`, text.length);
+  console.log(`[ReadLinkAI][googleDocs] Raw length`, text.length);
 
   const sanitizedText = sanitizeText(text);
+
+  // IMPORTANT: Empty docs are NOT errors
   if (isEmptyText(sanitizedText)) {
-    const err = new Error("Google Doc export returned empty text");
-    err.code = "PARSE_ERROR";
-    throw err;
+    console.warn(`[ReadLinkAI][googleDocs] Document is empty`);
+    return "";
   }
 
   const trimmedText = trimText(sanitizedText, 20000);
-  console.log(`[ChatDocs][googleDocs][fetchGoogleDocText] Success`, { length: trimmedText.length });
+
+  console.log(`[ReadLinkAI][googleDocs] Success`, { length: trimmedText.length });
+
   return trimmedText;
 }
