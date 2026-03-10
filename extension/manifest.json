@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "ChatDocs - Google Docs Reader for ChatGPT",
+  "version": "1.0.0",
+  "description": "Automatically fetches Google Docs content and injects it into ChatGPT prompts",
+
+  "permissions": ["activeTab", "storage", "scripting"],
+
+  "host_permissions": [
+    "https://chatgpt.com/*",
+    "https://chat.openai.com/*",
+    "https://docs.google.com/*"
+  ],
+
+  "content_scripts": [
+    {
+      "matches": [
+        "https://chatgpt.com/*",
+        "https://chat.openai.com/*"
+      ],
+      "js": [
+        "utils/textUtils.js",
+        "utils/messaging.js",
+        "linkDetector.js",
+        "fetchers/googleDocs.js",
+        "promptInterceptor.js",
+        "contentScript.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+
+  "background": {
+    "service_worker": "background.js"
+  }
+}
